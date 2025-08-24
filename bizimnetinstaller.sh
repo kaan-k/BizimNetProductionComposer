@@ -81,8 +81,8 @@ if [[ "${_choice}" == "5" ]]; then
 
   if [[ -f "$BACKUP_DIR/$RESTORE_FILE" ]]; then
     echo -e "${GREEN}[Restore] Geri yükleniyor...${RESET}"
-    docker cp "$BACKUP_DIR/$RESTORE_FILE" bizimnet-db:/tmp/restore.gz
-    docker exec bizimnet-db mongorestore --archive=/tmp/restore.gz --gzip --drop
+    docker cp "$BACKUP_DIR/$RESTORE_FILE" arycrm-mongo:/tmp/restore.gz
+    docker exec arycrm-mongo mongorestore --archive=/tmp/restore.gz --gzip --drop
     echo -e "${CYAN}Geri yükleme tamamlandı.${RESET}"
   else
     echo -e "${RED}Dosya bulunamadı: $RESTORE_FILE${RESET}"
