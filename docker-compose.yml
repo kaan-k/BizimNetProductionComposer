@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: arycrm-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - arycrm-network
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: arycrm-webapi
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__MongoDB=mongodb://mongo:27017/BizimNetDB
+    ports:
+      - "5142:8080"
+    networks:
+      - arycrm-network
+
+  webui:
+    build:
+      context: ./BizimNetWebUI
+      dockerfile: Dockerfile
+    container_name: arycrm-webui
+    ports:
+      - "4200:80"
+    networks:
+      - arycrm-network
+
+volumes:
+  mongo-data:  # ✅ Named volume for MongoDB persistence
+
+networks:
+  arycrm-network:
+    driver: bridge
