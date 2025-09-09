@@ -17,7 +17,7 @@ services:
       timeout: 5s
       retries: 5
 
-  webapi:
+webapi:
     build:
       context: .
       dockerfile: Dockerfile
@@ -31,6 +31,10 @@ services:
       - "5142:8080"
     networks:
       - arycrm-network
+    volumes:
+      - uploads-data:/app/wwwroot/Uploads   # <-- persist uploads here
+      # (optional) map logs, etc.
+
 
   webui:
     build:
@@ -44,7 +48,7 @@ services:
 
 volumes:
   mongo-data:  # ✅ Named volume for MongoDB persistence
-
+  uploads-data:
 networks:
   arycrm-network:
     driver: bridge
